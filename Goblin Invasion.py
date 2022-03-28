@@ -39,13 +39,20 @@ hitSound = pygame.mixer.Sound('hit.mp3')
 music = pygame.mixer.music.load('musicafundo.mp3')
 pygame.mixer.music.play(-1)
 
-#Definido classe do jogador
-class player(object):
-    def __init__(self,x,y,width,height):  #Construtor da classe e parâmetros iniciais 
+class sprite(object):
+     def __init__(self,x,y,width,height,xo,yo,wo,ho):
         self.x = x
         self.y = y
-        self.width = width
-        self.height = height
+        self.width=width
+        self.height=height
+        self.hitbox=[self.x+xo,self.y+yo,self.width+wo,self.height+ho]
+
+
+
+#Definido classe do jogador
+class player(sprite):
+    def __init__(self,x,y,width,height):  #Construtor da classe e parâmetros iniciais 
+        super.__init__(x,y,width,height,17,11,29,52)
         self.vel = 2.5                    #Velocidade do jogador
         self.velJump = 0                  #Velocidade do pulo
         self.isJump = False               #"Estado de pulo"
@@ -59,7 +66,6 @@ class player(object):
         self.countHit=0                   #Contador de hit
         self.countRecover=0               #Contador de recuperação
         self.imunityTime=0                #Tempo de imunidade
-        self.hitbox = (self.x + 17, self.y + 11, 29, 52)     #Caixa de colisão
 
     #Criando função de desenho na tela
     def draw(self, win):
@@ -126,10 +132,9 @@ class player(object):
         self.health+=1#incrementa 1 na vida ao jogador
         self.countRecover=10#contador de recuperacao
 #classe projétil
-class projectile(object):
+class projectile(sprite):
     def __init__(self,x,y,radius,color1,color2,facing): #Construtor da classe e parâmetros iniciais 
-        self.x = x
-        self.y = y
+        super.__init__(x,y,0,0,0,0,0,0)
         self.radius = radius#raio do circulo que corresponde ao projetil
         self.color1 = color1#cor 1
         self.color2 = color2#cor2
@@ -141,22 +146,18 @@ class projectile(object):
         pygame.draw.circle(win, self.color2, (self.x,self.y), self.radius,1) #desenho do círculo externo
 
 #classe do inimigo
-class enemy(object):
+class enemy(sprite):
     #caminha para direita(imagens)
     walkRight = [pygame.image.load('R1E.png'), pygame.image.load('R2E.png'), pygame.image.load('R3E.png'), pygame.image.load('R4E.png'), pygame.image.load('R5E.png'), pygame.image.load('R6E.png'), pygame.image.load('R7E.png'), pygame.image.load('R8E.png'), pygame.image.load('R9E.png'), pygame.image.load('R10E.png'), pygame.image.load('R11E.png')]
     #caminha para a esquerda(imagens)
     walkLeft = [pygame.image.load('L1E.png'), pygame.image.load('L2E.png'), pygame.image.load('L3E.png'), pygame.image.load('L4E.png'), pygame.image.load('L5E.png'), pygame.image.load('L6E.png'), pygame.image.load('L7E.png'), pygame.image.load('L8E.png'), pygame.image.load('L9E.png'), pygame.image.load('L10E.png'), pygame.image.load('L11E.png')]
 
     def __init__(self, x, y, width, height, end): #Construtor da classe e parâmetros iniciais 
-        self.x = x
-        self.y = y
-        self.width = width
-        self.height = height
+        super.__init__(x,y,width,height,17,2,31,57)
         self.end = end#ate onde o inimigo pode caminhar
         self.path = [self.x, self.end]#lista com a posicao em inicial e a posicao final, que o inimigo pode ir 
         self.walkCount = random.randint(1,66)#contador de passos aleatório
         self.vel = random.randint(-150,150)/100#velocidade aleátoria do inimigo
-        self.hitbox = (self.x + 17, self.y + 2, 31, 57)#hitbox (eixo x,eixoy,largura ,altura)
         self.health = 10#vida do inimigo
         self.bullets=[]#balas
 #cria a função de desenho do inimigo
@@ -213,14 +214,10 @@ class enemy(object):
             self.health -= 1#perde 1 de vida
             
 #classe dos obstaculos
-class obstacle(object):
+class obstacle(sprite):
     def __init__(self, x, y, width, height):#Construtor da classe e parâmetros iniciais
-        self.x = x
-        self.y = y
-        self.width = width
-        self.height = height
+        super.__init__(x,y,width,height,0,0,0,0)
         self.listObstacle = [pygame.image.load('caixa.png')]#imagem da caixa
-        self.hitbox = [self.x, self.y, self.width, self.height]#hitbox da caixa
 #cria a função de desenho dos obstaculos (caixas)
         
     def draw(self,win):
@@ -229,14 +226,11 @@ class obstacle(object):
         #pygame.draw.rect(win, (255,0,0), self.hitbox,2)
         
 #classe das vidas ganhar ao passar pelo coração
-class heart_life(object):
+class heart_life(sprite):
     def __init__(self, x, y, width, height):##Construtor da classe e parâmetros iniciais
-        self.x = x
-        self.y = y
-        self.width = width
-        self.height = height
+        super.__init__(x,y,width,height,4,4,-8,-10)
         self.listHearts = [pygame.image.load('heart.png')]#imagem coracao
-        self.hitbox = [self.x+4, self.y+4, self.width-8, self.height-10]#hitbox do coracao
+
         
 #desenho do coracao
     def draw(self,win):
