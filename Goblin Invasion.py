@@ -238,6 +238,18 @@ class heart_life(sprite):
         win.blit(image,(self.x,self.y))#atualiza
         #pygame.draw.rect(win, (255,0,0), self.hitbox,2)
         
+
+
+def resultado_na_tela(status,colors):
+    font1 = pygame.font.SysFont('roboto', 50)
+    text1 = font1.render(f'YOU {status}!!!', 1,colors)#texto voce morreu
+    win.blit(text1, (winWidth/2 - (text1.get_width()/2),winHeight/2))#atualiza o texto
+
+    font2 = pygame.font.SysFont('roboto', 30)
+    text2 = font2.render('Press ENTER to Restart!', 1, (200,200,200))#texto pressiona enter 
+    win.blit(text2, (winWidth/2 - (text2.get_width()/2),winHeight/2+50))#atuliza o texto
+
+    return font1,text1,font2,text2
 #função de principal de desenho
 def redrawGameWindow(countBg):
     if countBg[0] > 146: #se o contador de background maior que 146
@@ -262,23 +274,12 @@ def redrawGameWindow(countBg):
             heart.draw(win)
     #se saude do homem igual a 0
     if man.health==0:
-        font1 = pygame.font.SysFont('roboto', 50)
-        text1 = font1.render('YOU DIE!!!', 1, (255,0,0))#texto voce morreu
-        win.blit(text1, (winWidth/2 - (text1.get_width()/2),winHeight/2))#atualiza o texto
-
-        font2 = pygame.font.SysFont('roboto', 30)
-        text2 = font2.render('Press ENTER to Restart!', 1, (200,200,200))#texto pressiona enter 
-        win.blit(text2, (winWidth/2 - (text2.get_width()/2),winHeight/2+50))#atuliza o texto
+        font1,text1,font2,text2 = resultado_na_tela("DIE",(255,0,0))
 
     #se a lista de goblins está vazia
     if len(goblins)==0:
-        font1 = pygame.font.SysFont('roboto', 50)
-        text1 = font1.render('YOU WIN!', 1, (0,255,0))#texto voce ganhou
-        win.blit(text1, (winWidth/2 - (text1.get_width()/2),winHeight/2))#atualiza o texto
+        font1,text1,font2,text2 = resultado_na_tela("WIN",(0,255,0))
 
-        font2 = pygame.font.SysFont('roboto', 30)
-        text2 = font2.render('Press ENTER to Restart!', 1, (200,200,200))#texto pressiona enter
-        win.blit(text2, (winWidth/2 - (text2.get_width()/2),winHeight/2+50))#atualiza o texto
     countBg[0]+=1 #incrementa o contador de background
 
         
